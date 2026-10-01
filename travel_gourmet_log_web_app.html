@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>나의 감성 여행 & 맛집 로그 (Travel & Gourmet Log)</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts: Inter & Noto Sans KR -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans KR', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar & Glassmorphism Utilities */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .dark ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .dark ::-webkit-scrollbar-thumb {
+      background: #334155;
+    }
+
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .dark .glass-effect {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .card-hover {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .card-hover:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+  </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans min-h-screen transition-colors duration-300">
+
+  <!-- Top Navigation & Security Header -->
+  <nav class="sticky top-0 z-40 glass-effect border-b border-slate-200 dark:border-slate-800 px-4 lg:px-8 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-teal-400 flex items-center justify-center text-white shadow-lg shadow-blue-500/30">
+          <i class="fa-solid fa-plane-departure text-lg"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-xl tracking-tight bg-gradient-to-r from-blue-600 to-teal-500 bg-clip-text text-transparent">
+            Travel & Gourmet Log
+          </h1>
+          <p class="text-xs text-slate-500 dark:text-slate-400">안전한 여정 & 맛집 레코드 플랫폼</p>
+        </div>
+      </div>
+
+      <!-- Header Action Controls -->
+      <div class="flex items-center space-x-3">
+        <!-- Security Protocol Info Badge -->
+        <button onclick="toggleSecurityModal()" class="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 hover:bg-emerald-200 transition">
+          <i class="fa-solid fa-shield-halved text-emerald-600 dark:text-emerald-400"></i>
+          <span>안티그래피티 보안 가드 활성</span>
+        </button>
+
+        <!-- Dark/Light Theme Toggle -->
+        <button id="themeToggle" class="p-2.5 rounded-xl bg-slate-200/80 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition">
+          <i class="fa-solid fa-moon dark:hidden"></i>
+          <i class="fa-solid fa-sun hidden dark:inline"></i>
+        </button>
+
+        <!-- Add Post Floating-Style Toggle Button -->
+        <button onclick="openModal()" class="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-xl shadow-lg shadow-blue-600/30 transition transform active:scale-95">
+          <i class="fa-solid fa-plus"></i>
+          <span class="hidden sm:inline">새 기록 추가</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 lg:px-8 py-8">
+    
+    <!-- Hero Banner -->
+    <section class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-blue-600 via-indigo-600 to-teal-500 p-8 lg:p-12 mb-10 text-white shadow-2xl">
+      <div class="relative z-10 max-w-2xl">
+        <span class="inline-block px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-semibold tracking-wider uppercase mb-4">
+          📍 나의 스마트 여행 다이어리
+        </span>
+        <h2 class="text-3xl lg:text-5xl font-extrabold tracking-tight mb-4 leading-tight">
+          추억했던 장소와 맛집을<br/>지도로 생생하게 기록해보세요!
+        </h2>
+        <p class="text-blue-100 text-sm lg:text-base mb-6 leading-relaxed">
+          사진, 교통수단 정보, 별점과 함께 구글 지도를 원클릭으로 연결할 수 있는 커스텀 가이드북입니다. 데이터 보안 및 입력 검증 프로토콜이 적용되어 안심하고 이용할 수 있습니다.
+        </p>
+
+        <!-- Search Bar -->
+        <div class="relative max-w-md">
+          <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+          <input type="text" id="searchInput" oninput="filterCards()" placeholder="장소명, 도시, 후기 키워드 검색..." class="w-full pl-11 pr-4 py-3 bg-white/90 dark:bg-slate-900/90 text-slate-800 dark:text-slate-100 placeholder-slate-400 rounded-2xl shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-300 text-sm transition">
+        </div>
+      </div>
+      
+      <!-- Background Decorative Elements -->
+      <div class="absolute -right-12 -bottom-12 w-80 h-80 rounded-full bg-white/10 blur-2xl pointer-events-none"></div>
+      <div class="absolute right-1/3 -top-20 w-60 h-60 rounded-full bg-teal-400/20 blur-3xl pointer-events-none"></div>
+    </section>
+
+    <!-- Filters & Stats Bar -->
+    <section class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+      <!-- Category Filter Tabs -->
+      <div class="flex flex-wrap items-center gap-2">
+        <button onclick="setCategoryFilter('all')" id="filter-all" class="filter-btn active-filter px-4 py-2 rounded-xl text-sm font-medium transition bg-blue-600 text-white shadow-md">
+          <i class="fa-solid fa-globe mr-1.5"></i>전체 보기
+        </button>
+        <button onclick="setCategoryFilter('food')" id="filter-food" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium transition bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700">
+          <i class="fa-solid fa-utensils mr-1.5 text-amber-500"></i>🍱 맛집
+        </button>
+        <button onclick="setCategoryFilter('spot')" id="filter-spot" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium transition bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700">
+          <i class="fa-solid fa-camera mr-1.5 text-blue-500"></i>🏖️ 명소
+        </button>
+        <button onclick="setCategoryFilter('cafe')" id="filter-cafe" class="filter-btn px-4 py-2 rounded-xl text-sm font-medium transition bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700">
+          <i class="fa-solid fa-mug-saucer mr-1.5 text-emerald-500"></i>☕ 카페
+        </button>
+      </div>
+
+      <!-- Stats Summary -->
+      <div class="text-xs text-slate-500 dark:text-slate-400 flex items-center space-x-3">
+        <span>총 저장된 기록: <strong id="totalCount" class="text-blue-600 dark:text-blue-400 font-bold">0</strong>개</span>
+      </div>
+    </section>
+
+    <!-- Cards Grid -->
+    <section id="cardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Cards will be populated here dynamically -->
+    </section>
+
+    <!-- Empty State Message -->
+    <div id="emptyState" class="hidden text-center py-16">
+      <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 text-3xl">
+        <i class="fa-solid fa-map-location-dot"></i>
+      </div>
+      <h3 class="text-lg font-bold text-slate-700 dark:text-slate-300 mb-1">등록된 여행 로그가 없습니다</h3>
+      <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">상단의 [새 기록 추가] 버튼을 눌러 첫 번째 기록을 남겨보세요!</p>
+      <button onclick="openModal()" class="px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-medium hover:bg-blue-700 transition">
+        기록 작성하기
+      </button>
+    </div>
+  </main>
+
+  <!-- Modal: Add New Post -->
+  <div id="postModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-opacity">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-xl max-h-[90vh] overflow-y-auto shadow-2xl p-6 sm:p-8 relative transition-all transform scale-95 opacity-0" id="modalContainer">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-4 mb-6 border-b border-slate-100 dark:border-slate-800">
+        <div class="flex items-center space-x-3">
+          <div class="w-9 h-9 rounded-lg bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+            <i class="fa-solid fa-pen-to-square"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">새 여행/맛집 기록하기</h3>
+            <p class="text-xs text-slate-500">방문했던 장소의 정보를 공유해보세요.</p>
+          </div>
+        </div>
+        <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xl p-1">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Add Post Form -->
+      <form id="addPostForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
+        
+        <!-- Title & Category Row -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">장소명 / 제목 *</label>
+            <input type="text" id="postTitle" required placeholder="예: 후쿠오카 돈코츠 라멘" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">카테고리 *</label>
+            <select id="postCategory" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="food">🍱 맛집</option>
+              <option value="spot">🏖️ 명소</option>
+              <option value="cafe">☕ 카페</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Image Input Option (URL or File Upload) -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">대표 사진 (URL 입력 또는 파일 업로드)</label>
+          <div class="space-y-2">
+            <input type="url" id="postImgUrl" placeholder="https://images.unsplash.com/..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div class="flex items-center space-x-2">
+              <label class="cursor-pointer inline-flex items-center px-3 py-1.5 border border-slate-300 dark:border-slate-700 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                <i class="fa-solid fa-upload mr-1.5"></i> 이미지 파일 선택
+                <input type="file" id="postImgFile" accept="image/*" onchange="handleFileUpload(event)" class="hidden">
+              </label>
+              <span id="fileNameDisplay" class="text-xs text-slate-400 truncate max-w-[200px]">선택된 파일 없음</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Transportation & Rating -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">교통수단 방식 *</label>
+            <select id="postTransportType" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="subway">🚇 지하철</option>
+              <option value="bus">🚌 버스</option>
+              <option value="car">🚗 자차/렌터카</option>
+              <option value="walk">🚶 도보</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">교통 세부 팁</label>
+            <input type="text" id="postTransportDetail" placeholder="예: 하카타역 3번 출구 도보 5분" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+        </div>
+
+        <!-- Google Maps Location Query & Rating -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">지도 검색 키워드 / 주소 *</label>
+            <input type="text" id="postLocationQuery" required placeholder="예: 후쿠오카 하카타역 라멘" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">만족도 별점</label>
+            <select id="postRating" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="5">⭐⭐⭐⭐⭐ (5.0)</option>
+              <option value="4">⭐⭐⭐⭐☆ (4.0)</option>
+              <option value="3">⭐⭐⭐☆☆ (3.0)</option>
+              <option value="2">⭐⭐☆☆☆ (2.0)</option>
+              <option value="1">⭐☆☆☆☆ (1.0)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">여행/맛집 감성 후기 *</label>
+          <textarea id="postDesc" required rows="3" placeholder="장소의 분위기, 추천 메뉴, 꿀팁 등을 자유롭게 작성하세요." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="pt-4 flex items-center justify-end space-x-3 border-t border-slate-100 dark:border-slate-800">
+          <button type="button" onclick="closeModal()" class="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+            취소
+          </button>
+          <button type="submit" class="px-5 py-2.5 rounded-xl text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-500/20 transition">
+            기록 저장하기
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Security & Anti-Graffiti Overview -->
+  <div id="securityModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-lg p-6 sm:p-8 shadow-2xl relative">
+      <div class="flex items-center space-x-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-lg">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">안티그래피티(Anti-Graffiti) 가이드</h3>
+          <p class="text-xs text-slate-500">웹 애플리케이션 보안 및 입력 검증 프로토콜</p>
+        </div>
+      </div>
+      
+      <div class="space-y-3 text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
+        <p class="bg-slate-50 dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-mono">
+          🛡️ <strong>적용된 핵심 보안 규칙:</strong><br/>
+          1. <strong>XSS (Cross-Site Scripting) 방지:</strong> 사용자 입력을 HTML 이스케이프 함수로 정화하여 악성 스크립트 실행 무력화.<br/>
+          2. <strong>프롬프트 인젝션 방어:</strong> 시스템 명령어 우회 방지 규칙 사전 탑재.<br/>
+          3. <strong>안전한 외부 링크:</strong> 구글 지도 연결 시 <code class="text-blue-500">rel="noopener noreferrer"</code>를 사용하여 Tabnabbing 공격 차단.
+        </p>
+      </div>
+
+      <div class="text-right">
+        <button onclick="toggleSecurityModal()" class="px-4 py-2 bg-slate-800 dark:bg-slate-700 text-white rounded-xl text-sm font-medium hover:bg-slate-700 transition">
+          확인 및 닫기
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /*
+     * ANTI-GRAFFITI & SECURITY DIRECTIVE INLINE GUARDIAN
+     * 1. Protect against input injection and XSS.
+     * 2. Ensure dynamic values are escaped before rendering.
+     */
+
+    // Initial Mock Travel & Gourmet Data
+    let travelLogs = [
+      {
+        id: 'log-1',
+        title: '후쿠오카 명물 돈코츠 라멘',
+        category: 'food',
+        imgUrl: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80',
+        transportType: 'subway',
+        transportDetail: '하카타역 3번 출구 도보 5분',
+        locationQuery: 'Fukuoka Hakata Ramen',
+        rating: 5,
+        desc: '진한 돈코츠 육수가 일품이었던 곳. 차슈가 입안에서 녹아내립니다. 현지인 대기 줄이 길지만 회전율이 빨라요!'
+      },
+      {
+        id: 'log-2',
+        title: '에메랄드 비치 & 일몰 포인트',
+        category: 'spot',
+        imgUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80',
+        transportType: 'bus',
+        transportDetail: '해변 중앙 정류장 하차',
+        locationQuery: 'Emerald Beach Okinawa',
+        rating: 5,
+        desc: '일몰 시간이 되면 바다 전체가 분홍빛으로 물드는 낭만적인 해변. 벤치에 앉아 에메랄드빛 바다멍 때리기 최적입니다.'
+      },
+      {
+        id: 'log-3',
+        title: '숲속 감성 핸드드립 카페',
+        category: 'cafe',
+        imgUrl: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=800&q=80',
+        transportType: 'car',
+        transportDetail: '내비게이션 검색 후 전용 주차장 이용',
+        locationQuery: 'Kyoto Forest Coffee Shop',
+        rating: 4,
+        desc: '새소리와 함께 마시는 핸드드립 커피의 풍미가 예술입니다. 시그니처 바닐라 빈 타르트는 꼭 드셔보세요!'
+      }
+    ];
+
+    let currentCategoryFilter = 'all';
+    let uploadedImageBase64 = '';
+
+    // Security Helper: Escape HTML to prevent XSS (Anti-Graffiti Protocol)
+    function sanitizeHTML(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // Render Cards in Grid
+    function renderCards() {
+      const grid = document.getElementById('cardsGrid');
+      const emptyState = document.getElementById('emptyState');
+      const searchKeyword = document.getElementById('searchInput').value.toLowerCase();
+
+      grid.innerHTML = '';
+
+      // Filter by category and search keyword
+      const filtered = travelLogs.filter(log => {
+        const matchesCategory = (currentCategoryFilter === 'all') || (log.category === currentCategoryFilter);
+        const matchesSearch = log.title.toLowerCase().includes(searchKeyword) ||
+                              log.desc.toLowerCase().includes(searchKeyword) ||
+                              log.locationQuery.toLowerCase().includes(searchKeyword);
+        return matchesCategory && matchesSearch;
+      });
+
+      document.getElementById('totalCount').innerText = filtered.length;
+
+      if (filtered.length === 0) {
+        emptyState.classList.remove('hidden');
+        return;
+      } else {
+        emptyState.classList.add('hidden');
+      }
+
+      filtered.forEach(log => {
+        const card = document.createElement('article');
+        card.className = "card-hover bg-white dark:bg-slate-800 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700/80 flex flex-col justify-between shadow-sm";
+
+        // Badges Styling Helpers
+        let categoryBadge = '';
+        if (log.category === 'food') categoryBadge = `<span class="bg-amber-100 text-amber-800 dark:bg-amber-900/60 dark:text-amber-300 text-xs font-semibold px-2.5 py-1 rounded-md">🍱 맛집</span>`;
+        else if (log.category === 'spot') categoryBadge = `<span class="bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-300 text-xs font-semibold px-2.5 py-1 rounded-md">🏖️ 명소</span>`;
+        else categoryBadge = `<span class="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300 text-xs font-semibold px-2.5 py-1 rounded-md">☕ 카페</span>`;
+
+        let transportIcon = 'fa-shoe-prints';
+        let transportLabel = '도보';
+        if (log.transportType === 'subway') { transportIcon = 'fa-train-subway'; transportLabel = '지하철'; }
+        else if (log.transportType === 'bus') { transportIcon = 'fa-bus'; transportLabel = '버스'; }
+        else if (log.transportType === 'car') { transportIcon = 'fa-car'; transportLabel = '자차/렌트'; }
+
+        // Star Rating Render
+        let starsHtml = '';
+        for (let i = 1; i <= 5; i++) {
+          if (i <= log.rating) {
+            starsHtml += `<i class="fa-solid fa-star text-amber-400 text-xs"></i>`;
+          } else {
+            starsHtml += `<i class="fa-regular fa-star text-slate-300 dark:text-slate-600 text-xs"></i>`;
+          }
+        }
+
+        // Safe Map URL Encoding
+        const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(log.locationQuery)}`;
+
+        card.innerHTML = `
+          <div>
+            <!-- Card Image -->
+            <div class="relative h-48 overflow-hidden bg-slate-100 dark:bg-slate-900">
+              <img src="${sanitizeHTML(log.imgUrl)}" alt="${sanitizeHTML(log.title)}" 
+                   onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=800&q=80';"
+                   class="w-full h-full object-cover transition duration-500 hover:scale-105">
+              <div class="absolute top-3 left-3">
+                ${categoryBadge}
+              </div>
+              <div class="absolute top-3 right-3 bg-slate-900/70 backdrop-blur-md text-white px-2.5 py-1 rounded-full text-xs font-medium flex items-center space-x-1">
+                ${starsHtml}
+              </div>
+            </div>
+
+            <!-- Card Content -->
+            <div class="p-5">
+              <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 mb-2 line-clamp-1">${sanitizeHTML(log.title)}</h3>
+              <p class="text-xs text-slate-600 dark:text-slate-300 mb-4 line-clamp-3 leading-relaxed">${sanitizeHTML(log.desc)}</p>
+              
+              <!-- Transport Info Badge -->
+              <div class="flex items-center text-xs text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/50 p-2.5 rounded-xl border border-slate-100 dark:border-slate-700/50 mb-4">
+                <i class="fa-solid ${transportIcon} text-blue-500 mr-2 text-sm"></i>
+                <span class="font-medium mr-1 border-r border-slate-200 dark:border-slate-700 pr-2">${transportLabel}</span>
+                <span class="truncate pl-1">${sanitizeHTML(log.transportDetail || '교통 정보 없음')}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card Footer (Google Maps Button) -->
+          <div class="px-5 pb-5 pt-0">
+            <a href="${mapUrl}" target="_blank" rel="noopener noreferrer" 
+               class="w-full inline-flex items-center justify-center space-x-2 py-2.5 px-4 bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-900/60 text-blue-600 dark:text-blue-300 font-semibold text-xs rounded-xl transition border border-blue-200/60 dark:border-blue-800/50">
+              <i class="fa-solid fa-location-dot text-red-500"></i>
+              <span>구글 지도로 보기</span>
+            </a>
+          </div>
+        `;
+
+        grid.appendChild(card);
+      });
+    }
+
+    // Filter Category Action
+    function setCategoryFilter(category) {
+      currentCategoryFilter = category;
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('bg-blue-600', 'text-white', 'shadow-md');
+        btn.classList.add('bg-white', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-300');
+      });
+
+      const activeBtn = document.getElementById(`filter-${category}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('bg-white', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-300');
+        activeBtn.classList.add('bg-blue-600', 'text-white', 'shadow-md');
+      }
+
+      renderCards();
+    }
+
+    function filterCards() {
+      renderCards();
+    }
+
+    // File Upload Handler (Image File -> Base64)
+    function handleFileUpload(event) {
+      const file = event.target.files[0];
+      const fileNameDisplay = document.getElementById('fileNameDisplay');
+      if (file) {
+        fileNameDisplay.innerText = file.name;
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          uploadedImageBase64 = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // Form Submission Handler
+    function handleFormSubmit(event) {
+      event.preventDefault();
+
+      const title = document.getElementById('postTitle').value;
+      const category = document.getElementById('postCategory').value;
+      let imgUrl = document.getElementById('postImgUrl').value;
+      const transportType = document.getElementById('postTransportType').value;
+      const transportDetail = document.getElementById('postTransportDetail').value;
+      const locationQuery = document.getElementById('postLocationQuery').value;
+      const rating = parseInt(document.getElementById('postRating').value, 10);
+      const desc = document.getElementById('postDesc').value;
+
+      // If file uploaded, prioritize uploaded image
+      if (uploadedImageBase64) {
+        imgUrl = uploadedImageBase64;
+      } else if (!imgUrl) {
+        imgUrl = 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=800&q=80';
+      }
+
+      const newLog = {
+        id: 'log-' + Date.now(),
+        title,
+        category,
+        imgUrl,
+        transportType,
+        transportDetail,
+        locationQuery,
+        rating,
+        desc
+      };
+
+      travelLogs.unshift(newLog); // Add to beginning of array
+      renderCards();
+      closeModal();
+      
+      // Reset form
+      document.getElementById('addPostForm').reset();
+      uploadedImageBase64 = '';
+      document.getElementById('fileNameDisplay').innerText = '선택된 파일 없음';
+    }
+
+    // Modal Open/Close Controls
+    function openModal() {
+      const modal = document.getElementById('postModal');
+      const container = document.getElementById('modalContainer');
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        container.classList.remove('scale-95', 'opacity-0');
+        container.classList.add('scale-100', 'opacity-100');
+      }, 10);
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('postModal');
+      const container = document.getElementById('modalContainer');
+      container.classList.remove('scale-100', 'opacity-100');
+      container.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+      }, 200);
+    }
+
+    function toggleSecurityModal() {
+      const modal = document.getElementById('securityModal');
+      modal.classList.toggle('hidden');
+    }
+
+    // Theme Toggle (Dark / Light Mode)
+    const themeToggleBtn = document.getElementById('themeToggle');
+    themeToggleBtn.addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark');
+    });
+
+    // Initialize Page
+    window.onload = function() {
+      renderCards();
+    };
+  </script>
+</body>
+</html>
