@@ -321,6 +321,12 @@
     </div>
   </div>
 
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-800 text-white px-4 py-3 rounded-xl shadow-lg flex items-center space-x-3 pointer-events-none">
+    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+    <span id="toastMsg" class="text-sm font-medium">알림 메시지</span>
+  </div>
+
   <script>
     /*
      * ANTI-GRAFFITI & SECURITY DIRECTIVE INLINE GUARDIAN
@@ -328,8 +334,41 @@
      * 2. Ensure dynamic values are escaped before rendering.
      */
 
-    // Initial Mock Travel & Gourmet Data
-    let travelLogs = [
+    // Initial Mock Travel & Gourmet Data or Load from LocalStorage
+    const defaultLogs = [
+      {
+        id: 'log-kr-1',
+        title: '부산 해운대 오션뷰 카페',
+        category: 'cafe',
+        imgUrl: 'https://images.unsplash.com/photo-1559314809-0d155014e29e?auto=format&fit=crop&w=800&q=80',
+        transportType: 'subway',
+        transportDetail: '해운대역 3번 출구 도보 10분',
+        locationQuery: '해운대해수욕장 카페',
+        rating: 5,
+        desc: '탁 트인 해운대 바다가 한눈에 들어오는 최고의 오션뷰 카페! 시그니처 바다 소금 라떼가 정말 맛있습니다. 창가 자리는 필수예요.'
+      },
+      {
+        id: 'log-kr-2',
+        title: '제주도 흑돼지 참숯구이 찐맛집',
+        category: 'food',
+        imgUrl: 'https://images.unsplash.com/photo-1628294895950-9805252327bc?auto=format&fit=crop&w=800&q=80',
+        transportType: 'car',
+        transportDetail: '전용 주차장 이용 가능',
+        locationQuery: '제주도 흑돼지 맛집',
+        rating: 5,
+        desc: '두툼한 흑돼지를 참숯에 구워 육즙이 팡팡 터집니다! 멜젓에 푹 찍어 먹으면 환상적이에요. 웨이팅이 길지만 기다린 보람이 있습니다.'
+      },
+      {
+        id: 'log-kr-3',
+        title: '서울 야경의 끝판왕, 남산 서울타워',
+        category: 'spot',
+        imgUrl: 'https://images.unsplash.com/photo-1515859005217-8a1f08870f59?auto=format&fit=crop&w=800&q=80',
+        transportType: 'bus',
+        transportDetail: '남산 순환버스 01번 탑승',
+        locationQuery: 'N서울타워',
+        rating: 4,
+        desc: '서울 도심이 한눈에 내려다보이는 야경 명소! 케이블카를 타거나 버스로 쉽게 올라갈 수 있어요. 선선한 가을밤 산책코스로 강력 추천합니다.'
+      },
       {
         id: 'log-1',
         title: '후쿠오카 명물 돈코츠 라멘',
@@ -364,6 +403,31 @@
         desc: '새소리와 함께 마시는 핸드드립 커피의 풍미가 예술입니다. 시그니처 바닐라 빈 타르트는 꼭 드셔보세요!'
       }
     ];
+
+    let travelLogs = JSON.parse(localStorage.getItem('travelGourmetLogs_v2')) || defaultLogs;
+
+    function saveLogs() {
+      localStorage.setItem('travelGourmetLogs_v2', JSON.stringify(travelLogs));
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      toastMsg.innerText = msg;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 3000);
+    }
+
+    function deleteLog(id) {
+      if(confirm('이 기록을 정말 삭제하시겠습니까?')) {
+        travelLogs = travelLogs.filter(log => log.id !== id);
+        saveLogs();
+        renderCards();
+        showToast('기록이 삭제되었습니다.');
+      }
+    }
 
     let currentCategoryFilter = 'all';
     let uploadedImageBase64 = '';
@@ -407,7 +471,7 @@
 
       filtered.forEach(log => {
         const card = document.createElement('article');
-        card.className = "card-hover bg-white dark:bg-slate-800 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700/80 flex flex-col justify-between shadow-sm";
+        card.className = "group card-hover bg-white dark:bg-slate-800 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700/80 flex flex-col justify-between shadow-sm";
 
         // Badges Styling Helpers
         let categoryBadge = '';
@@ -444,8 +508,13 @@
               <div class="absolute top-3 left-3">
                 ${categoryBadge}
               </div>
-              <div class="absolute top-3 right-3 bg-slate-900/70 backdrop-blur-md text-white px-2.5 py-1 rounded-full text-xs font-medium flex items-center space-x-1">
-                ${starsHtml}
+              <div class="absolute top-3 right-3 flex items-center space-x-2">
+                <div class="bg-slate-900/70 backdrop-blur-md text-white px-2.5 py-1 rounded-full text-xs font-medium flex items-center space-x-1">
+                  ${starsHtml}
+                </div>
+                <button onclick="deleteLog('${log.id}')" class="bg-red-500/90 hover:bg-red-600 backdrop-blur-md text-white w-7 h-7 rounded-full flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 shadow-lg" title="삭제">
+                  <i class="fa-solid fa-trash text-xs"></i>
+                </button>
               </div>
             </div>
 
@@ -545,8 +614,10 @@
       };
 
       travelLogs.unshift(newLog); // Add to beginning of array
+      saveLogs();
       renderCards();
       closeModal();
+      showToast('새로운 기록이 추가되었습니다!');
       
       // Reset form
       document.getElementById('addPostForm').reset();
