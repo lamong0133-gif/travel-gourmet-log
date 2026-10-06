@@ -337,28 +337,6 @@
     // Initial Mock Travel & Gourmet Data or Load from LocalStorage
     const defaultLogs = [
       {
-        id: 'log-kr-1',
-        title: '부산 해운대 오션뷰 카페',
-        category: 'cafe',
-        imgUrl: 'https://images.unsplash.com/photo-1559314809-0d155014e29e?auto=format&fit=crop&w=800&q=80',
-        transportType: 'subway',
-        transportDetail: '해운대역 3번 출구 도보 10분',
-        locationQuery: '해운대해수욕장 카페',
-        rating: 5,
-        desc: '탁 트인 해운대 바다가 한눈에 들어오는 최고의 오션뷰 카페! 시그니처 바다 소금 라떼가 정말 맛있습니다. 창가 자리는 필수예요.'
-      },
-      {
-        id: 'log-kr-2',
-        title: '제주도 흑돼지 참숯구이 찐맛집',
-        category: 'food',
-        imgUrl: 'https://images.unsplash.com/photo-1628294895950-9805252327bc?auto=format&fit=crop&w=800&q=80',
-        transportType: 'car',
-        transportDetail: '전용 주차장 이용 가능',
-        locationQuery: '제주도 흑돼지 맛집',
-        rating: 5,
-        desc: '두툼한 흑돼지를 참숯에 구워 육즙이 팡팡 터집니다! 멜젓에 푹 찍어 먹으면 환상적이에요. 웨이팅이 길지만 기다린 보람이 있습니다.'
-      },
-      {
         id: 'log-kr-3',
         title: '서울 야경의 끝판왕, 남산 서울타워',
         category: 'spot',
@@ -368,17 +346,6 @@
         locationQuery: 'N서울타워',
         rating: 4,
         desc: '서울 도심이 한눈에 내려다보이는 야경 명소! 케이블카를 타거나 버스로 쉽게 올라갈 수 있어요. 선선한 가을밤 산책코스로 강력 추천합니다.'
-      },
-      {
-        id: 'log-1',
-        title: '후쿠오카 명물 돈코츠 라멘',
-        category: 'food',
-        imgUrl: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80',
-        transportType: 'subway',
-        transportDetail: '하카타역 3번 출구 도보 5분',
-        locationQuery: 'Fukuoka Hakata Ramen',
-        rating: 5,
-        desc: '진한 돈코츠 육수가 일품이었던 곳. 차슈가 입안에서 녹아내립니다. 현지인 대기 줄이 길지만 회전율이 빨라요!'
       },
       {
         id: 'log-2',
@@ -392,6 +359,17 @@
         desc: '일몰 시간이 되면 바다 전체가 분홍빛으로 물드는 낭만적인 해변. 벤치에 앉아 에메랄드빛 바다멍 때리기 최적입니다.'
       },
       {
+        id: 'log-kr-1',
+        title: '부산 해운대 오션뷰 카페',
+        category: 'cafe',
+        imgUrl: 'https://images.unsplash.com/photo-1559314809-0d155014e29e?auto=format&fit=crop&w=800&q=80',
+        transportType: 'subway',
+        transportDetail: '해운대역 3번 출구 도보 10분',
+        locationQuery: '해운대해수욕장 카페',
+        rating: 5,
+        desc: '탁 트인 해운대 바다가 한눈에 들어오는 최고의 오션뷰 카페! 시그니처 바다 소금 라떼가 정말 맛있습니다. 창가 자리는 필수예요.'
+      },
+      {
         id: 'log-3',
         title: '숲속 감성 핸드드립 카페',
         category: 'cafe',
@@ -401,13 +379,35 @@
         locationQuery: 'Kyoto Forest Coffee Shop',
         rating: 4,
         desc: '새소리와 함께 마시는 핸드드립 커피의 풍미가 예술입니다. 시그니처 바닐라 빈 타르트는 꼭 드셔보세요!'
+      },
+      {
+        id: 'log-kr-2',
+        title: '제주도 흑돼지 참숯구이 찐맛집',
+        category: 'food',
+        imgUrl: 'https://images.unsplash.com/photo-1628294895950-9805252327bc?auto=format&fit=crop&w=800&q=80',
+        transportType: 'car',
+        transportDetail: '전용 주차장 이용 가능',
+        locationQuery: '제주도 흑돼지 맛집',
+        rating: 5,
+        desc: '두툼한 흑돼지를 참숯에 구워 육즙이 팡팡 터집니다! 멜젓에 푹 찍어 먹으면 환상적이에요. 웨이팅이 길지만 기다린 보람이 있습니다.'
+      },
+      {
+        id: 'log-1',
+        title: '후쿠오카 명물 돈코츠 라멘',
+        category: 'food',
+        imgUrl: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80',
+        transportType: 'subway',
+        transportDetail: '하카타역 3번 출구 도보 5분',
+        locationQuery: 'Fukuoka Hakata Ramen',
+        rating: 5,
+        desc: '진한 돈코츠 육수가 일품이었던 곳. 차슈가 입안에서 녹아내립니다. 현지인 대기 줄이 길지만 회전율이 빨라요!'
       }
     ];
 
-    let travelLogs = JSON.parse(localStorage.getItem('travelGourmetLogs_v2')) || defaultLogs;
+    let travelLogs = JSON.parse(localStorage.getItem('travelGourmetLogs_v3')) || defaultLogs;
 
     function saveLogs() {
-      localStorage.setItem('travelGourmetLogs_v2', JSON.stringify(travelLogs));
+      localStorage.setItem('travelGourmetLogs_v3', JSON.stringify(travelLogs));
     }
 
     function showToast(msg) {
