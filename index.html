@@ -108,6 +108,12 @@
           <i class="fa-solid fa-sun hidden dark:inline"></i>
         </button>
 
+        <!-- Contact Button -->
+        <button id="contactBtn" onclick="openContactModal()" class="flex items-center space-x-2 px-4 py-2 rounded-xl font-medium bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:border-teal-400 hover:text-teal-600 dark:hover:text-teal-300 transition transform active:scale-95">
+          <i class="fa-solid fa-envelope"></i>
+          <span class="hidden sm:inline">문의하기</span>
+        </button>
+
         <!-- Add Post Floating-Style Toggle Button -->
         <button onclick="openModal()" class="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-xl shadow-lg shadow-blue-600/30 transition transform active:scale-95">
           <i class="fa-solid fa-plus"></i>
@@ -322,6 +328,61 @@
           확인 및 닫기
         </button>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal: Contact / Inquiry -->
+  <div id="contactModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+    <div id="contactContainer" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl p-6 sm:p-8 relative transition-all transform scale-95 opacity-0">
+      <div class="flex items-center justify-between pb-4 mb-6 border-b border-slate-100 dark:border-slate-800">
+        <div class="flex items-center space-x-3">
+          <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-blue-600 to-teal-400 text-white flex items-center justify-center shadow-md shadow-teal-500/30">
+            <i class="fa-solid fa-envelope"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">문의하기</h3>
+            <p class="text-xs text-slate-500">궁금한 점이나 제안을 남겨주세요.</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeContactModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xl p-1" aria-label="닫기">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="contactForm" onsubmit="handleContactSubmit(event)" class="space-y-4">
+        <!-- Honeypot (hidden from humans, catches bots) -->
+        <input type="text" id="contactWebsite" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="contactName" class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">이름 *</label>
+            <input type="text" id="contactName" required maxlength="30" placeholder="홍길동" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+          <div>
+            <label for="contactEmail" class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">이메일 *</label>
+            <input type="email" id="contactEmail" required maxlength="100" placeholder="you@example.com" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+        </div>
+        <div>
+          <label for="contactType" class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">문의 유형</label>
+          <select id="contactType" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="general">💬 일반 문의</option>
+            <option value="suggest">📍 장소 추천 / 제안</option>
+            <option value="bug">🛠️ 오류 신고</option>
+            <option value="partner">🤝 제휴 문의</option>
+          </select>
+        </div>
+        <div>
+          <label for="contactMessage" class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">문의 내용 *</label>
+          <textarea id="contactMessage" required rows="5" maxlength="1000" oninput="document.getElementById('contactCount').innerText = this.value.length" placeholder="문의 내용을 자세히 적어주세요." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+          <p class="text-right text-[11px] text-slate-400 mt-1"><span id="contactCount">0</span> / 1000</p>
+        </div>
+        <div class="pt-4 flex items-center justify-end space-x-3 border-t border-slate-100 dark:border-slate-800">
+          <button type="button" onclick="closeContactModal()" class="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition">취소</button>
+          <button type="submit" id="contactSubmitBtn" class="px-5 py-2.5 rounded-xl text-sm font-medium bg-gradient-to-r from-blue-600 to-teal-500 hover:from-blue-700 hover:to-teal-600 text-white shadow-md shadow-blue-500/20 transition">
+            <i class="fa-solid fa-paper-plane mr-1.5"></i>문의 보내기
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -654,6 +715,75 @@
       const modal = document.getElementById('securityModal');
       modal.classList.toggle('hidden');
     }
+
+    // Contact Modal Controls
+    function openContactModal() {
+      const modal = document.getElementById('contactModal');
+      const container = document.getElementById('contactContainer');
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        container.classList.remove('scale-95', 'opacity-0');
+        container.classList.add('scale-100', 'opacity-100');
+        document.getElementById('contactName').focus();
+      }, 10);
+    }
+
+    function closeContactModal() {
+      const modal = document.getElementById('contactModal');
+      const container = document.getElementById('contactContainer');
+      container.classList.remove('scale-100', 'opacity-100');
+      container.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+      }, 200);
+    }
+
+    // Contact Submission (validated + length-limited, sent via /api/contact -> Resend)
+    async function handleContactSubmit(event) {
+      event.preventDefault();
+      const name = document.getElementById('contactName').value.trim().slice(0, 30);
+      const email = document.getElementById('contactEmail').value.trim().slice(0, 100);
+      const type = document.getElementById('contactType').value;
+      const message = document.getElementById('contactMessage').value.trim().slice(0, 1000);
+      const website = document.getElementById('contactWebsite').value;
+
+      if (!name || !message || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showToast('입력 내용을 다시 확인해주세요.');
+        return;
+      }
+
+      const submitBtn = document.getElementById('contactSubmitBtn');
+      const originalLabel = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1.5"></i>전송 중...';
+
+      try {
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, type, message, website })
+        });
+        if (!res.ok) throw new Error('send failed');
+
+        document.getElementById('contactForm').reset();
+        document.getElementById('contactCount').innerText = '0';
+        closeContactModal();
+        showToast('문의가 전송되었습니다. 감사합니다!');
+      } catch (err) {
+        showToast('전송에 실패했습니다. 잠시 후 다시 시도해주세요.');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalLabel;
+      }
+    }
+
+    // Close contact modal on backdrop click or Escape key
+    document.getElementById('contactModal').addEventListener('click', (e) => {
+      if (e.target.id === 'contactModal') closeContactModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !document.getElementById('contactModal').classList.contains('hidden')) closeContactModal();
+    });
 
     // Theme Toggle (Dark / Light Mode)
     const themeToggleBtn = document.getElementById('themeToggle');
