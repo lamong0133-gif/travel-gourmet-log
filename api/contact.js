@@ -30,8 +30,11 @@ module.exports = async (req, res) => {
   const apiKey = process.env.RESEND_API_KEY;
   const to = process.env.CONTACT_TO_EMAIL;
   const from = process.env.CONTACT_FROM_EMAIL || 'Travel Gourmet Log <onboarding@resend.dev>';
-  if (!apiKey || !to) {
-    return res.status(500).json({ error: 'Server is not configured' });
+  if (!apiKey) {
+    return res.status(500).json({ error: 'RESEND_API_KEY_MISSING' });
+  }
+  if (!to) {
+    return res.status(500).json({ error: 'CONTACT_TO_EMAIL_MISSING' });
   }
 
   let body = req.body;
