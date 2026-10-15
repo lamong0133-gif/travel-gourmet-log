@@ -109,6 +109,10 @@
         </button>
 
         <!-- Contact Button -->
+        <button id="kakaoHeaderBtn" onclick="openKakaoChat()" class="flex items-center space-x-1.5 px-3.5 py-2 rounded-xl font-semibold bg-[#FEE500] hover:bg-[#fed800] text-[#191919] transition transform active:scale-95 shadow-sm text-xs sm:text-sm" title="카카오톡 문의">
+          <i class="fa-solid fa-comment"></i>
+          <span class="hidden sm:inline">카톡 문의</span>
+        </button>
         <button id="contactBtn" onclick="openContactModal()" class="flex items-center space-x-2 px-4 py-2 rounded-xl font-medium bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:border-teal-400 hover:text-teal-600 dark:hover:text-teal-300 transition transform active:scale-95">
           <i class="fa-solid fa-envelope"></i>
           <span class="hidden sm:inline">문의하기</span>
@@ -349,6 +353,23 @@
         </button>
       </div>
 
+      <!-- Kakao Quick Link Banner inside Modal -->
+      <div class="mb-4 p-3.5 rounded-2xl bg-[#FFF9D2] dark:bg-amber-950/40 border border-[#FEE500] dark:border-amber-800/60 flex items-center justify-between">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-8 h-8 rounded-xl bg-[#FEE500] text-[#191919] flex items-center justify-center font-bold text-sm shadow-sm flex-shrink-0">
+            <i class="fa-solid fa-comment"></i>
+          </div>
+          <div>
+            <p class="text-xs font-bold text-slate-800 dark:text-slate-100">빠른 실시간 상담이 필요하신가요?</p>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400">카카오톡 1:1 채팅으로 편리하게 문의하세요.</p>
+          </div>
+        </div>
+        <button type="button" onclick="openKakaoChat()" class="px-3 py-1.5 rounded-lg bg-[#FEE500] hover:bg-[#fed800] text-[#191919] text-xs font-bold transition shadow-sm flex items-center space-x-1 flex-shrink-0">
+          <span>카톡 상담</span>
+          <i class="fa-solid fa-chevron-right text-[10px]"></i>
+        </button>
+      </div>
+
       <form id="contactForm" onsubmit="handleContactSubmit(event)" class="space-y-4">
         <!-- Honeypot (hidden from humans, catches bots) -->
         <input type="text" id="contactWebsite" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true">
@@ -385,6 +406,12 @@
       </form>
     </div>
   </div>
+
+  <!-- Floating Kakao Quick Consultation Button -->
+  <button id="kakaoFloatingBtn" onclick="openKakaoChat()" class="fixed bottom-6 right-6 z-40 flex items-center space-x-2 px-4 py-3 rounded-full bg-[#FEE500] hover:bg-[#fed800] text-[#191919] font-bold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 active:scale-95 text-sm" title="카카오톡 1:1 문의">
+    <i class="fa-solid fa-comment text-lg"></i>
+    <span class="font-bold">카톡 문의</span>
+  </button>
 
   <!-- Toast Notification -->
   <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-800 text-white px-4 py-3 rounded-xl shadow-lg flex items-center space-x-3 pointer-events-none">
@@ -792,6 +819,12 @@
     });
 
     // Initialize Page
+    // KakaoTalk Chat Link Handler
+    const KAKAO_CHAT_URL = 'https://open.kakao.com/o/sXgW0Log';
+    function openKakaoChat() {
+      window.open(KAKAO_CHAT_URL, '_blank', 'noopener,noreferrer');
+    }
+
     window.onload = function() {
       renderCards();
     };
